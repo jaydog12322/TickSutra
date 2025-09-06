@@ -1,0 +1,144 @@
+# requirements.txt
+"""
+Required packages for Real-time Data Logger
+"""
+PyQt5>=5.15.0
+pandas>=1.3.0
+pyarrow>=5.0.0  # For Parquet support
+openpyxl>=3.0.0  # For Excel file reading
+
+# config_template.py
+"""
+Configuration template for the data logger.
+Copy this to config.py and modify as needed.
+"""
+
+# Paths
+SYMBOL_EXCEL_PATH = "./config/symbol_universe.xlsx"
+OUTPUT_DATA_DIR = "./data"
+
+# Buffer settings
+BUFFER_SIZE = 5000  # Number of records before forced write
+WRITE_INTERVAL_SECONDS = 30  # Periodic write interval
+
+# Kiwoom settings
+SCREEN_NUMBERS = ["1000", "1001", "1002", "1003", "1004", "1005", "1006", "1007"]
+QUOTE_FIDS = "10;11;12;13;27;28"  # FIDs to capture
+
+# Logging settings
+LOG_LEVEL = "INFO"
+LOG_FORMAT = "%(asctime)s | %(levelname)-8s | %(name)-20s | %(message)s"
+
+# Test symbols (used if Excel file not found)
+TEST_SYMBOLS = [
+    "005930",  # Samsung Electronics
+    "000660",  # SK Hynix
+    "035420",  # Naver
+    "051910",  # LG Chem
+    "006400",  # Samsung SDI
+    "035720",  # Kakao
+    "207940",  # Samsung Biologics
+    "068270",  # Celltrion
+    "323410",  # Kakao Bank
+    "377300",  # Kakao Pay
+]
+
+
+# create_sample_symbols.py
+"""
+Creates a sample symbol universe Excel file for testing.
+Run this once to create the symbol file.
+"""
+import pandas as pd
+from pathlib import Path
+
+def create_sample_symbol_file():
+    """Create sample symbol universe Excel file"""
+
+    # Sample symbols (713 total for full test, using subset for demo)
+    symbols = [
+        "005930",  # Samsung Electronics
+        "000660",  # SK Hynix
+        "035420",  # Naver
+        "051910",  # LG Chem
+        "006400",  # Samsung SDI
+        "035720",  # Kakao
+        "207940",  # Samsung Biologics
+        "068270",  # Celltrion
+        "323410",  # Kakao Bank
+        "377300",  # Kakao Pay
+        "028260",  # Samsung C&T
+        "009150",  # Samsung Electro
+        "032830",  # Samsung Life
+        "010140",  # Samsung Heavy
+        "018260",  # Samsung SDS
+        # Add more symbols here for full universe...
+    ]
+
+    # Create DataFrame
+    df = pd.DataFrame({
+        'Symbol': symbols
+    })
+
+    # Create config directory
+    config_dir = Path("./config")
+    config_dir.mkdir(exist_ok=True)
+
+    # Save to Excel
+    output_path = config_dir / "symbol_universe.xlsx"
+    df.to_excel(output_path, index=False)
+
+    print(f"Created sample symbol file: {output_path}")
+    print(f"Contains {len(symbols)} symbols")
+
+    return output_path
+
+if __name__ == "__main__":
+    create_sample_symbol_file()
+
+
+# run_logger.py
+"""
+Simple runner script for the data logger.
+"""
+import sys
+import os
+from pathlib import Path
+
+def setup_environment():
+    """Setup environment and paths"""
+
+    # Create necessary directories
+    Path("./config").mkdir(exist_ok=True)
+    Path("./data").mkdir(exist_ok=True)
+    Path("./logs").mkdir(exist_ok=True)
+
+    # Check if symbol file exists
+    symbol_file = Path("./config/symbol_universe.xlsx")
+    if not symbol_file.exists():
+        print("WARNING: Symbol file not found. Creating sample file...")
+        from create_sample_symbols import create_sample_symbol_file
+        create_sample_symbol_file()
+
+    print("Environment setup complete")
+
+def main():
+    """Main runner"""
+    print("=== Real-time Data Logger ===")
+    print("Setting up environment...")
+
+    setup_environment()
+
+    print("Starting data logger...")
+    print("Please ensure:")
+    print("1. Kiwoom OpenAPI+ is installed")
+    print("2. You have valid Kiwoom account")
+    print("3. Symbol universe file exists in ./config/")
+    print("")
+
+    # Import and run main logger
+    from data_logger_main import main as run_logger
+    run_logger()
+
+if __name__ == "__main__":
+    main()
