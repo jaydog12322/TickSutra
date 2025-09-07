@@ -22,7 +22,10 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QLabel, QTextEdit
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
+    QWidget, QPushButton, QLabel, QTextEdit
+)
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread
 from PyQt5.QAxContainer import QAxWidget
 
@@ -55,7 +58,8 @@ class KiwoomDataLogger(QObject):
         self.is_connected = False
 
         # Screen management
-        self.screen_numbers = ["1000", "1001", "1002", "1003", "1004", "1005", "1006", "1007"]
+        self.screen_numbers = ["1000", "1001", "1002", "1003",
+                               "1004", "1005", "1006", "1007"]
         self.screen_symbol_map = {}  # screen_no -> [symbols]
         self.symbol_screen_map = {}  # symbol -> screen_no
 
@@ -135,7 +139,10 @@ class KiwoomDataLogger(QObject):
                 nxt_codes = ";".join([f"{symbol}_NX" for symbol in screen_symbols])
                 ret_nxt = self.ocx.SetRealReg(screen_no, nxt_codes, self.quote_fids, "0")
 
-                logger.info(f"Screen {screen_no}: {len(screen_symbols)} symbols - KRX:{ret_krx}, NXT:{ret_nxt}")
+                logger.info(
+                    f"Screen {screen_no}: {len(screen_symbols)} symbols - "
+                    f"KRX:{ret_krx}, NXT:{ret_nxt}"
+                )
 
                 if ret_krx != 0:
                     print(f"WARNING: KRX registration failed for screen {screen_no}: {ret_krx}")
@@ -197,19 +204,13 @@ class KiwoomDataLogger(QObject):
             logger.debug(f"Error getting FID {fid} for {code}: {e}")
             return ""
 
-
 class DataBuffer(QObject):
-    """
-    Data buffer and Parquet writer.
-    Buffers incoming data and writes to Parquet files.
-    """
-
+    """Data buffer and Parquet writer."""
     buffer_full = pyqtSignal(int)
     file_written = pyqtSignal(str, int)
 
     def __init__(self, buffer_size=5000, output_dir="./data"):
         super().__init__()
-
         self.buffer_size = buffer_size
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
@@ -223,7 +224,8 @@ class DataBuffer(QObject):
         self.write_timer.timeout.connect(self._periodic_write)
         self.write_timer.start(30000)  # Write every 30 seconds
 
-        logger.info(f"DataBuffer initialized: buffer_size={buffer_size}, output_dir={output_dir}")
+        logger.info(f"DataBuffer initialized: buffer_size={buffer_size}, "
+                    f"output_dir={output_dir}")
 
     def add_record(self, record: Dict[str, Any]):
         """Add record to buffer"""
@@ -256,12 +258,10 @@ class DataBuffer(QObject):
 
             # Write or append to Parquet
             if filepath.exists():
-                # Append to existing file
                 existing_df = pd.read_parquet(filepath)
                 combined_df = pd.concat([existing_df, df], ignore_index=True)
                 combined_df.to_parquet(filepath, index=False)
             else:
-                # Create new file
                 df.to_parquet(filepath, index=False)
 
             # Clear buffer
@@ -384,17 +384,14 @@ class DataLoggerGUI(QMainWindow):
     def _load_and_register_symbols(self):
         """Load symbols and register for real-time data"""
         try:
-            # Load symbols from Excel (placeholder path)
             symbol_file = "./config/symbol_universe.xlsx"
             self.symbols = SymbolLoader.load_from_excel(symbol_file)
 
             if not self.symbols:
                 self._log_message(f"ERROR: No symbols loaded from {symbol_file}")
-                # Use test symbols if file not found
                 self.symbols = ["005930", "000660", "035420"]  # Samsung, Hynix, Naver
                 self._log_message(f"Using test symbols: {self.symbols}")
 
-            # Register symbols
             if self.kiwoom.load_symbols_and_register(self.symbols):
                 self.load_symbols_btn.setEnabled(False)
                 self.stop_btn.setEnabled(True)
