@@ -50,7 +50,7 @@ Each record contains:
 ```bash
 pip install PyQt5>=5.15.0
 pip install pandas>=1.3.0
-pip install pyarrow>=5.0.0
+pip install "fastparquet>=2024.2"
 pip install openpyxl>=3.0.0
 ```
 
@@ -59,6 +59,15 @@ pip install openpyxl>=3.0.0
 ### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
+```
+If `fastparquet` is missing after installing requirements, install it separately:
+```bash
+pip install fastparquet==0.6.2
+```
+
+`pyarrow` is an optional alternative but requires 64-bit Python 3.7–3.9:
+```bash
+pip install pyarrow==5.0.0
 ```
 
 ### 2. Create Directory Structure

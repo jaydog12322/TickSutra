@@ -22,7 +22,7 @@ def test_dependencies():
     required_packages = {
         'PyQt5': 'PyQt5',
         'pandas': 'pandas',
-        'pyarrow': 'pyarrow',
+        'fastparquet': 'fastparquet',
         'openpyxl': 'openpyxl'
     }
 
@@ -190,11 +190,11 @@ def test_parquet_operations():
 
         # Write to Parquet
         test_file = Path("./data/test_output.parquet")
-        df.to_parquet(test_file, index=False)
+        df.to_parquet(test_file, index=False, engine="fastparquet")
         print("✓ Parquet write successful")
 
         # Read back from Parquet
-        df_read = pd.read_parquet(test_file)
+        df_read = pd.read_parquet(test_file, engine="fastparquet")
         print(f"✓ Parquet read successful ({len(df_read)} records)")
 
         # Verify data integrity
@@ -209,6 +209,7 @@ def test_parquet_operations():
 
     except Exception as e:
         print(f"✗ Parquet operations failed: {e}")
+        print("  Install with: pip install fastparquet")
         return False
 
 

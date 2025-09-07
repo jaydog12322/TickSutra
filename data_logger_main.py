@@ -257,12 +257,12 @@ class DataBuffer(QObject):
             # Write or append to Parquet
             if filepath.exists():
                 # Append to existing file
-                existing_df = pd.read_parquet(filepath)
+                existing_df = pd.read_parquet(filepath, engine="fastparquet")
                 combined_df = pd.concat([existing_df, df], ignore_index=True)
-                combined_df.to_parquet(filepath, index=False)
+                combined_df.to_parquet(filepath, index=False, engine="fastparquet")
             else:
                 # Create new file
-                df.to_parquet(filepath, index=False)
+                df.to_parquet(filepath, index=False, engine="fastparquet")
 
             # Clear buffer
             records_written = len(self.buffer)
