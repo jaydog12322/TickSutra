@@ -252,8 +252,8 @@ class KiwoomDataLogger(QObject):
 
         # Real-time registration data
         self.screens = list(range(1000, 1008))  # 8 screens: 1000-1007
-        # FIDs: level-1 order book (주식호가잔량)
-        self.hoga_fids = "27;28;41;51"
+        # FIDs: price, change, volume + level-1 order book (주식호가잔량)
+        self.hoga_fids = "10;11;12;13;27;28;41;51"
 
         # Data tracking
         self.registered_symbols = []
@@ -361,16 +361,20 @@ class KiwoomDataLogger(QObject):
                 venue = "KRX"
                 symbol = code
 
-            # Extract FID data (L1 order book)
+            # Extract FID data (price, volume, L1 order book)
             record = {
                 "timestamp": datetime.now().isoformat(),
                 "symbol": symbol,
                 "venue": venue,
                 "real_type": real_type,
-                "fid_27": self._get_real_data(code, 27),  # 매도호가1
-                "fid_28": self._get_real_data(code, 28),  # 매수호가1
-                "fid_41": self._get_real_data(code, 41),  # 매도호가수량1
-                "fid_51": self._get_real_data(code, 51),  # 매수호가수량1
+                "fid_10": self._get_real_data(code, 10),  # 현재가 (Current Price)
+                "fid_11": self._get_real_data(code, 11),  # 전일대비 (Change from Prev Close)
+                "fid_12": self._get_real_data(code, 12),  # 등락율 (Rate of Change)
+                "fid_13": self._get_real_data(code, 13),  # 누적거래량 (Accumulated Volume)
+                "fid_27": self._get_real_data(code, 27),  # 매도호가1 (Best Ask Price)
+                "fid_28": self._get_real_data(code, 28),  # 매수호가1 (Best Bid Price)
+                "fid_41": self._get_real_data(code, 41),  # 매도호가수량1 (Best Ask Size)
+                "fid_51": self._get_real_data(code, 51),  # 매수호가수량1 (Best Bid Size)
                 "raw_code": code
             }
 

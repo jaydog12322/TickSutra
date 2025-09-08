@@ -28,6 +28,10 @@ Each record contains:
     "symbol": "005930",                         # Base symbol
     "venue": "KRX" | "NXT",                    # Trading venue
     "real_type": "주식호가잔량",                 # Kiwoom real-time type
+    "fid_10": 84500,    # 현재가 (Current Price)
+    "fid_11": 10,       # 전일대비 (Change from Prev Close)
+    "fid_12": 0.12,     # 등락율 (Rate of Change)
+    "fid_13": 15000,    # 누적거래량 (Accumulated Volume)
     "fid_27": 84510,    # 매도호가1 (Best Ask Price)
     "fid_28": 84490,    # 매수호가1 (Best Bid Price)
     "fid_41": 100,      # 매도호가수량1 (Best Ask Size)
@@ -283,7 +287,7 @@ This logger creates data files that can be fed into your arbitrage system simula
 
 ### Data Compatibility
 The output schema exactly matches your arbitrage system's MarketDataManager expectations:
-- Same FID fields (27,28,41,51)
+- Same FID fields (10,11,12,13,27,28,41,51)
 - Same venue detection logic (_NX suffix)
 - Same real-time type ("주식호가잔량")
 - Compatible timestamp format
@@ -311,7 +315,7 @@ def filter_symbols(symbols):
 ### Custom FID Fields
 ```python
 # To capture additional fields, modify hoga_fids:
-self.hoga_fids = "27;28;41;51;20"  # Add FID 20 (체결시간)
+self.hoga_fids = "10;11;12;13;27;28;41;51;20"  # Add FID 20 (체결시간)
 ```
 
 ## Production Deployment
