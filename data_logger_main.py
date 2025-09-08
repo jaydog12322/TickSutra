@@ -303,14 +303,21 @@ class KiwoomDataLogger(QObject):
             self.connected.emit(False)
             self.status_update.emit(f"Connection failed: {err_code}")
 
-    def register_symbols(self, symbols: List[str]):
-        """Register symbols for real-time data"""
+    def register_symbols(self, symbols: List[str]) -> int:
+        """Register symbols for real-time data.
+
+        Returns
+        -------
+        int
+            Number of symbols successfully registered.
+        """
         if not self.is_connected:
             logger.error("Cannot register symbols: not connected to Kiwoom")
-            return
+            return 0
 
         self.registered_symbols = symbols
         symbols_per_screen = len(symbols) // len(self.screens) + 1
+        success_count = 0
 
         for i, screen in enumerate(self.screens):
             start_idx = i * symbols_per_screen
@@ -337,14 +344,22 @@ class KiwoomDataLogger(QObject):
                 )
 
                 if ret == 0:
-                    logger.info(f"✓ Screen {screen}: Registered {len(screen_symbols)} symbols ({len(all_codes)} codes)")
+                    success_count += len(screen_symbols)
+                    logger.info(
+                        f"✓ Screen {screen}: Registered {len(screen_symbols)} symbols ({len(all_codes)} codes)"
+                    )
                 else:
                     logger.error(f"✗ Screen {screen}: Registration failed: {ret}")
+                    self.status_update.emit(f"Screen {screen} registration failed: {ret}")
 
             except Exception as e:
                 logger.error(f"Error registering screen {screen}: {e}")
+                self.status_update.emit(f"Error registering screen {screen}: {e}")
 
-        logger.info(f"Registration complete: {len(symbols)} symbols across {len(self.screens)} screens")
+        logger.info(
+            f"Registration complete: {success_count}/{len(symbols)} symbols across {len(self.screens)} screens"
+        )
+        return success_count
 
     def _on_receive_real_data(self, code, real_type, data):
         """Handle real-time data"""
@@ -435,8 +450,18 @@ class SymbolLoader:
                 symbol_col = df.columns[0]
                 logger.warning(f"No standard symbol column found, using: {symbol_col}")
 
-            symbols = df[symbol_col].astype(str).str.strip().tolist()
-            symbols = [s for s in symbols if s and s != 'nan']
+            # Extract only numeric portions, drop non-numeric entries,
+            # and left-pad codes to six digits
+            symbols_series = df[symbol_col].astype(str).str.replace(r'\D', '', regex=True)
+
+            # Remove empty strings and codes longer than 6 digits
+            symbols_series = symbols_series[(symbols_series != '') & (symbols_series.str.len() <= 6)]
+
+            # Pad with leading zeros and filter for exact 6-digit codes
+            symbols_series = symbols_series.str.zfill(6)
+            symbols_series = symbols_series[symbols_series.str.len() == 6]
+
+            symbols = symbols_series.tolist()
 
             logger.info(f"Loaded {len(symbols)} symbols from {filepath}")
             return symbols
@@ -590,13 +615,18 @@ class DataLoggerGUI(QMainWindow):
                 self.log_message("❌ 심볼 파일을 찾을 수 없습니다. ./config/symbol_universe.xlsx 확인")
                 return
 
-            # Register with Kiwoom
-            self.kiwoom.register_symbols(symbols)
-            self.symbols_status.setText(f"심볼: {len(symbols)}개 등록됨")
-            self.log_message(f"✅ {len(symbols)}개 심볼 등록 완료")
+            # Register with Kiwoom and get count of successfully registered symbols
+            registered = self.kiwoom.register_symbols(symbols)
 
-            # Enable start button
-            self.start_btn.setEnabled(True)
+            if registered > 0:
+                self.symbols_status.setText(f"심볼: {registered}개 등록됨")
+                self.log_message(f"✅ {registered}개 심볼 등록 완료")
+                # Enable start button only when at least one symbol registered
+                self.start_btn.setEnabled(True)
+            else:
+                self.symbols_status.setText("심볼: 0개 등록됨")
+                self.log_message("❌ 심볼 등록 실패")
+                self.start_btn.setEnabled(False)
 
         except Exception as e:
             self.log_message(f"❌ 심볼 로드 실패: {e}")
