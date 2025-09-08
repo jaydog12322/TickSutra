@@ -454,6 +454,8 @@ class DataLoggerGUI(QMainWindow):
         self.init_ui()
         self.init_components()
         self.connect_signals()
+        # Automatically kick off the logging pipeline once the GUI is ready
+        QTimer.singleShot(0, self.start_logging)
 
     def init_ui(self):
         """Initialize UI components"""
@@ -600,9 +602,29 @@ class DataLoggerGUI(QMainWindow):
             self.log_message(f"❌ 심볼 로드 실패: {e}")
 
     def start_logging(self):
-        """Start data logging"""
+        """Start data logging.
+
+        This orchestrates the full startup sequence:
+        - Connect to Kiwoom if not already connected
+        - Load and register symbols once connected
+        - Enable logging controls
+        """
+
+        # Ensure we are connected
+        if not self.kiwoom.is_connected:
+            # Connection is asynchronous; on_kiwoom_connected will recall this
+            self.log_message("키움 API 연결 요청...")
+            self.connect_kiwoom()
+            return
+
+        # Ensure symbols are registered
+        if not self.kiwoom.registered_symbols:
+            self.log_message("심볼 로드 및 등록 중...")
+            self.load_symbols()
         self.start_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
+        self.connect_btn.setEnabled(False)
+        self.load_symbols_btn.setEnabled(False)
         self.log_message("✅ 로깅 시작")
 
     def stop_logging(self):
@@ -617,7 +639,8 @@ class DataLoggerGUI(QMainWindow):
         """Handle Kiwoom connection result"""
         if success:
             self.connection_status.setText("상태: ✅ 연결됨")
-            self.load_symbols_btn.setEnabled(True)
+            # Proceed with loading symbols and starting the logger
+            self.start_logging()
         else:
             self.connection_status.setText("상태: ❌ 연결 실패")
 
