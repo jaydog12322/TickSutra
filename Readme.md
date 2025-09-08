@@ -27,13 +27,11 @@ Each record contains:
     "timestamp": "2025-09-06T09:00:30.123456",  # Microsecond precision
     "symbol": "005930",                         # Base symbol
     "venue": "KRX" | "NXT",                    # Trading venue
-    "real_type": "주식시세",                     # Kiwoom real-time type
-    "fid_10": 84500,    # 현재가 (Current Price)
-    "fid_11": 500,      # 전일대비 (Change from Previous Day)
-    "fid_12": 0.59,     # 등락률 (Change Rate)
-    "fid_13": 1234567,  # 누적거래량 (Cumulative Volume)
-    "fid_27": 84600,    # 매도호가 (Ask Price)
-    "fid_28": 84500,    # 매수호가 (Bid Price)
+    "real_type": "주식호가잔량",                 # Kiwoom real-time type
+    "fid_27": 84510,    # 매도호가1 (Best Ask Price)
+    "fid_28": 84490,    # 매수호가1 (Best Bid Price)
+    "fid_41": 100,      # 매도호가수량1 (Best Ask Size)
+    "fid_51": 120,      # 매수호가수량1 (Best Bid Size)
     "raw_code": "005930" | "005930_NX"  # Original code from Kiwoom
 }
 ```
@@ -248,10 +246,10 @@ def prepare_spread_data(df):
     # Merge KRX and NXT data for same timestamp/symbol
     merged = krx_data.join(nxt_data, how='inner', lsuffix='_krx', rsuffix='_nxt')
     
-    # Calculate potential spreads
-    merged['krx_mid'] = (merged['fid_27_krx'] + merged['fid_28_krx']) / 2  # KRX mid
-    merged['nxt_mid'] = (merged['fid_27_nxt'] + merged['fid_28_nxt']) / 2  # NXT mid
-    merged['spread_bps'] = (merged['krx_mid'] - merged['nxt_mid']) / merged['krx_mid'] * 10000
+    # Calculate potential spreads using best bid/ask
+    merged['spread_bps'] = (
+        (merged['fid_28_krx'] - merged['fid_27_nxt']) / merged['fid_27_nxt'] * 10000
+    )
     
     return merged
 
@@ -285,9 +283,9 @@ This logger creates data files that can be fed into your arbitrage system simula
 
 ### Data Compatibility
 The output schema exactly matches your arbitrage system's MarketDataManager expectations:
-- Same FID fields (10,11,12,13,27,28)
+- Same FID fields (27,28,41,51)
 - Same venue detection logic (_NX suffix)
-- Same real-time type ("주식시세")
+- Same real-time type ("주식호가잔량")
 - Compatible timestamp format
 
 ## Advanced Configuration
@@ -312,8 +310,8 @@ def filter_symbols(symbols):
 
 ### Custom FID Fields
 ```python
-# To capture additional fields, modify quote_fids:
-self.quote_fids = "10;11;12;13;27;28;20"  # Add FID 20 (체결시간)
+# To capture additional fields, modify hoga_fids:
+self.hoga_fids = "27;28;41;51;20"  # Add FID 20 (체결시간)
 ```
 
 ## Production Deployment

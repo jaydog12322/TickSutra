@@ -9,7 +9,7 @@ to a single daily Parquet file for later simulation use.
 MODIFIED VERSION: Uses external parquet_tool.exe for 32-bit compatibility
 
 Design:
-- Captures "주식시세" real-time data only
+- Captures "주식호가잔량" level-1 order book only
 - Uses screen sharding (8 screens, ~89 symbols each)
 - Buffers 5,000 records before writing
 - Outputs to single daily Parquet file via external tool
@@ -252,7 +252,8 @@ class KiwoomDataLogger(QObject):
 
         # Real-time registration data
         self.screens = list(range(1000, 1008))  # 8 screens: 1000-1007
-        self.quote_fids = "10;11;12;13;27;28"  # FIDs we want
+        # FIDs: level-1 order book (주식호가잔량)
+        self.hoga_fids = "27;28;41;51"
 
         # Data tracking
         self.registered_symbols = []
@@ -331,7 +332,7 @@ class KiwoomDataLogger(QObject):
                 ret = self.ocx.SetRealReg(
                     str(screen),  # Screen number
                     codes_str,  # Symbol codes
-                    self.quote_fids,  # FID list
+                    self.hoga_fids,  # FID list
                     "1"  # Real-time type
                 )
 
@@ -348,8 +349,8 @@ class KiwoomDataLogger(QObject):
     def _on_receive_real_data(self, code, real_type, data):
         """Handle real-time data"""
         try:
-            # Filter for stock quotes only
-            if real_type != "주식시세":
+            # Only process level-1 order book events
+            if real_type != "주식호가잔량":
                 return
 
             # Determine venue and symbol
@@ -360,18 +361,16 @@ class KiwoomDataLogger(QObject):
                 venue = "KRX"
                 symbol = code
 
-            # Extract FID data
+            # Extract FID data (L1 order book)
             record = {
                 "timestamp": datetime.now().isoformat(),
                 "symbol": symbol,
                 "venue": venue,
                 "real_type": real_type,
-                "fid_10": self._get_real_data(code, 10),  # 현재가
-                "fid_11": self._get_real_data(code, 11),  # 전일대비
-                "fid_12": self._get_real_data(code, 12),  # 등락률
-                "fid_13": self._get_real_data(code, 13),  # 누적거래량
-                "fid_27": self._get_real_data(code, 27),  # 매도호가
-                "fid_28": self._get_real_data(code, 28),  # 매수호가
+                "fid_27": self._get_real_data(code, 27),  # 매도호가1
+                "fid_28": self._get_real_data(code, 28),  # 매수호가1
+                "fid_41": self._get_real_data(code, 41),  # 매도호가수량1
+                "fid_51": self._get_real_data(code, 51),  # 매수호가수량1
                 "raw_code": code
             }
 

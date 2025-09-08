@@ -161,26 +161,22 @@ def test_parquet_operations():
                 "timestamp": "2025-09-06T09:00:30.123456",
                 "symbol": "005930",
                 "venue": "KRX",
-                "real_type": "주식시세",
-                "fid_10": "84500",
-                "fid_11": "500",
-                "fid_12": "0.59",
-                "fid_13": "1234567",
-                "fid_27": "84600",
-                "fid_28": "84500",
+                "real_type": "주식호가잔량",
+                "fid_27": "84510",
+                "fid_28": "84490",
+                "fid_41": "100",
+                "fid_51": "120",
                 "raw_code": "005930"
             },
             {
                 "timestamp": "2025-09-06T09:00:30.123456",
                 "symbol": "005930",
                 "venue": "NXT",
-                "real_type": "주식시세",
-                "fid_10": "84550",
-                "fid_11": "550",
-                "fid_12": "0.65",
-                "fid_13": "1234567",
-                "fid_27": "84650",
-                "fid_28": "84550",
+                "real_type": "주식호가잔량",
+                "fid_27": "84560",
+                "fid_28": "84540",
+                "fid_41": "80",
+                "fid_51": "90",
                 "raw_code": "005930_NX"
             }
         ]
@@ -230,7 +226,7 @@ def test_logger_import():
         print("✓ DataBuffer initialization successful")
 
         # Test symbol loader
-        test_symbols = SymbolLoader.load_from_excel("./config/symbol_universe.xlsx")
+        test_symbols = SymbolLoader.load_symbols("./config/symbol_universe.xlsx")
         print(f"✓ SymbolLoader successful ({len(test_symbols)} symbols loaded)")
 
         return True
@@ -294,111 +290,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# create_sample_symbols.py
-"""
-Creates a sample symbol universe Excel file for testing.
-"""
-import pandas as pd
-from pathlib import Path
-
-
-def create_sample_symbol_file():
-    """Create sample symbol universe Excel file"""
-
-    # Extended sample symbols for better testing
-    symbols = [
-        # Major tech stocks
-        "005930",  # Samsung Electronics
-        "000660",  # SK Hynix
-        "035420",  # Naver
-        "035720",  # Kakao
-        "323410",  # Kakao Bank
-        "377300",  # Kakao Pay
-
-        # Major industrials
-        "051910",  # LG Chem
-        "006400",  # Samsung SDI
-        "207940",  # Samsung Biologics
-        "068270",  # Celltrion
-        "028260",  # Samsung C&T
-        "009150",  # Samsung Electro-Mechanics
-
-        # Financial
-        "105560",  # KB Financial
-        "055550",  # Shinhan Financial
-        "086790",  # Hana Financial
-        "316140",  # Woori Financial
-
-        # Consumer
-        "097950",  # CJ CheilJedang
-        "271560",  # Orion
-        "002790",  # Amorepacific
-        "090430",  # Amore G
-
-        # Auto/Shipbuilding
-        "005380",  # Hyundai Motor
-        "012330",  # Hyundai Mobis
-        "009540",  # HD Korea Shipbuilding
-        "067630",  # HLB
-
-        # Energy/Materials
-        "010950",  # S-Oil
-        "011170",  # Lotte Chemical
-        "034730",  # SK
-        "017670",  # SK Telecom
-
-        # More tech/telecom
-        "030200",  # KT
-        "032640",  # LG Uplus
-        "018260",  # Samsung SDS
-        "036570",  # NCsoft
-
-        # Additional stocks to reach good test size
-        "000270",  # Kia
-        "003670",  # Posco
-        "005490",  # POSCO Holdings
-        "000810",  # Samsung Fire
-        "032830",  # Samsung Life
-        "010140",  # Samsung Heavy Industries
-        "009830",  # Hanwha Solutions
-        "047050",  # Posco International
-        "003550",  # LG
-        "066570",  # LG Electronics
-        "051900",  # LG Household & Health
-        "034220",  # LG Display
-        "002380",  # KCC
-        "185750",  # Korea Zinc
-        "000720",  # Hyundai Engineering
-        "011200",  # HMM
-        "139480",  # Emart
-        "007070",  # GS Retail
-        "161390",  # Hanwha Q CELLS
-    ]
-
-    # Create DataFrame
-    df = pd.DataFrame({
-        'Symbol': symbols
-    })
-
-    # Create config directory
-    config_dir = Path("./config")
-    config_dir.mkdir(exist_ok=True)
-
-    # Save to Excel
-    output_path = config_dir / "symbol_universe.xlsx"
-    df.to_excel(output_path, index=False)
-
-    print(f"Created sample symbol file: {output_path}")
-    print(f"Contains {len(symbols)} symbols")
-    print("Symbols include major stocks from various sectors:")
-    print("- Technology (Samsung, Naver, Kakao)")
-    print("- Financial (KB, Shinhan, Hana)")
-    print("- Industrial (LG Chem, POSCO)")
-    print("- Consumer (Amorepacific, Orion)")
-    print("- Auto (Hyundai, Kia)")
-
-    return output_path
-
-
-if __name__ == "__main__":
-    create_sample_symbol_file()
