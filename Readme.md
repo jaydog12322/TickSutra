@@ -42,32 +42,36 @@ Each record contains:
 
 ### System Requirements
 - Windows OS (required for Kiwoom OpenAPI+)
-- Python 3.7+ (32-bit recommended for Kiwoom compatibility)
+- **Python 3.8 (32-bit)**
 - Valid Kiwoom Securities account
 - Kiwoom OpenAPI+ installed
 
 ### Python Packages
+Use the pinned versions below for a tested environment.  Run the helper script
+so the correct `requirements.txt` is located automatically regardless of your
+current working directory:
 ```bash
-pip install PyQt5>=5.15.0
-pip install pandas>=1.3.0
-pip install "fastparquet>=2024.2"
-pip install openpyxl>=3.0.0
+python install_requirements.py
 ```
+This installs:
+```
+PyQt5==5.15.7
+pandas==1.3.5
+numpy==1.21.6
+fastparquet==0.6.2
+openpyxl==3.0.10
+```
+
+Only the packages above are required for running the logger.  Extraneous
+entries from previous `pip freeze` outputs have been trimmed to keep
+`requirements.txt` focused on essential dependencies.
+
 
 ## Setup Instructions
 
 ### 1. Install Dependencies
 ```bash
-pip install -r requirements.txt
-```
-If `fastparquet` is missing after installing requirements, install it separately:
-```bash
-pip install fastparquet==0.6.2
-```
-
-`pyarrow` is an optional alternative but requires 64-bit Python 3.7–3.9:
-```bash
-pip install pyarrow==5.0.0
+python install_requirements.py
 ```
 
 ### 2. Create Directory Structure
