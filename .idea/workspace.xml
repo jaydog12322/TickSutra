@@ -23,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="09_07" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,12 +39,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.Parquet to Excel Converter.executor": "Run",
     "Python.check_versions.executor": "Run",
     "Python.data_logger_main.executor": "Run",
     "Python.test_data_logger.executor": "Run",
     "Python.test_logging_pipeline.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "double-buffer-upgrade__0909",
     "last_opened_file_path": "C:/Tools/TickSutra",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -113,7 +114,8 @@
       <workItem from="1757147558607" duration="5504000" />
       <workItem from="1757219578939" duration="2799000" />
       <workItem from="1757222404288" duration="10671000" />
-      <workItem from="1757292469389" duration="14625000" />
+      <workItem from="1757292469389" duration="18051000" />
+      <workItem from="1757380590819" duration="1650000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -211,7 +213,23 @@
       <option name="project" value="LOCAL" />
       <updated>1757315231350</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="a">
+      <option name="closed" value="true" />
+      <created>1757315995211</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1757315995211</updated>
+    </task>
+    <task id="LOCAL-00014" summary="a">
+      <option name="closed" value="true" />
+      <created>1757381730225</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1757381730225</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,6 +243,7 @@
     <SUITE FILE_PATH="coverage/TickSutra$data_logger_main.coverage" NAME="data_logger_main Coverage Results" MODIFIED="1757315426274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$check_versions.coverage" NAME="check_versions Coverage Results" MODIFIED="1757173859475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$test_logging_pipeline.coverage" NAME="test_logging_pipeline Coverage Results" MODIFIED="1757311801980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TickSutra$Parquet_to_Excel_Converter.coverage" NAME="Parquet to Excel Converter Coverage Results" MODIFIED="1757318317932" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$test_data_logger.coverage" NAME="test_data_logger Coverage Results" MODIFIED="1757303862238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

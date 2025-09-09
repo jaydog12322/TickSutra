@@ -11,7 +11,7 @@ MODIFIED VERSION: Uses external parquet_tool.exe for 32-bit compatibility
 Design:
 - Captures "주식호가잔량" level-1 order book only
 - Uses screen sharding (8 screens, ~89 symbols each)
-- Buffers 5,000 records before writing
+- Double-buffers 100,000 records with background writer thread
 - Outputs to single daily Parquet file via external tool
 - Independent from main arbitrage system
 """
@@ -21,12 +21,14 @@ import logging
 import time
 import subprocess
 import tempfile
+import threading
+from queue import Queue
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QLabel, QTextEdit
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 from PyQt5.QAxContainer import QAxWidget
 
 # Configure logging
@@ -42,13 +44,14 @@ class DataBuffer(QObject):
     """
     MODIFIED: Data buffer using external parquet_tool.exe
     Buffers incoming data and writes to Parquet files via external tool.
+    Implements double buffering and an asynchronous writer thread.
     """
 
     buffer_full = pyqtSignal(int)
     file_written = pyqtSignal(str, int)
     parquet_error = pyqtSignal(str)
 
-    def __init__(self, buffer_size=5000, output_dir="./data", parquet_tool_path="./parquet_tool.exe"):
+    def __init__(self, buffer_size=100000, output_dir="./data", parquet_tool_path="./parquet_tool.exe"):
         super().__init__()
 
         self.buffer_size = buffer_size
@@ -56,14 +59,20 @@ class DataBuffer(QObject):
         self.output_dir.mkdir(exist_ok=True)
         self.parquet_tool_path = Path(parquet_tool_path)
 
-        # Data buffer
-        self.buffer = []
+        # Double buffers
+        self.buffer: List[Dict[str, Any]] = []  # active buffer
+        self.pending_buffer: List[Dict[str, Any]] = []  # buffer awaiting write
         self.total_records = 0
 
-        # Timer for periodic writes
+        # Queue and writer thread
+        self._write_queue: Queue = Queue()
+        self._writer_thread = threading.Thread(target=self._writer_loop, daemon=True)
+        self._writer_thread.start()
+
+        # Timer for periodic writes (every 1 second)
         self.write_timer = QTimer()
         self.write_timer.timeout.connect(self._periodic_write)
-        self.write_timer.start(30000)  # Write every 30 seconds
+        self.write_timer.start(1000)
 
         # Validate parquet tool exists
         self.tool_available = self._validate_parquet_tool()
@@ -105,23 +114,39 @@ class DataBuffer(QObject):
             return False
 
     def add_record(self, record: Dict[str, Any]):
-        """Add record to buffer"""
+        """Add record to active buffer"""
         self.buffer.append(record)
         self.total_records += 1
 
-        # Write if buffer is full
         if len(self.buffer) >= self.buffer_size:
-            self._write_buffer()
-            self.buffer_full.emit(len(self.buffer))
+            self._swap_and_enqueue()
 
     def _periodic_write(self):
-        """Periodic write (every 30 seconds)"""
+        """Periodic flush of active buffer"""
         if self.buffer:
-            self._write_buffer()
+            self._swap_and_enqueue()
 
-    def _write_buffer(self):
-        """Write buffer to Parquet file using standalone tool"""
-        if not self.buffer:
+    def _swap_and_enqueue(self):
+        """Swap active buffer with pending and enqueue for writing"""
+        self.buffer, self.pending_buffer = self.pending_buffer, self.buffer
+        full_buffer = self.pending_buffer
+        self.pending_buffer = []
+        self._write_queue.put(full_buffer)
+        self.buffer_full.emit(len(full_buffer))
+
+    def _writer_loop(self):
+        """Background writer thread loop"""
+        while True:
+            chunk = self._write_queue.get()
+            if chunk is None:
+                self._write_queue.task_done()
+                break
+            self._write_chunk(chunk)
+            self._write_queue.task_done()
+
+    def _write_chunk(self, chunk: List[Dict[str, Any]]):
+        """Write a chunk of records to Parquet via external tool"""
+        if not chunk:
             return
 
         if not self.tool_available:
@@ -136,7 +161,7 @@ class DataBuffer(QObject):
 
             # Create temporary JSON file for the buffer data
             with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as temp_file:
-                json.dump(self.buffer, temp_file, ensure_ascii=False, indent=None)
+                json.dump(chunk, temp_file, ensure_ascii=False, indent=None)
                 temp_json_path = temp_file.name
 
             try:
@@ -149,12 +174,10 @@ class DataBuffer(QObject):
                     result = self._run_parquet_tool('write', temp_json_path, str(filepath))
 
                 if result['status'] == 'success':
-                    records_written = len(self.buffer)
-                    self.buffer.clear()
+                    records_written = len(chunk)
 
                     # Emit success signal
                     self.file_written.emit(str(filepath), records_written)
-
                     logger.info(f"Successfully wrote {records_written} records to {filepath}")
                     if 'size_mb' in result:
                         logger.info(
@@ -221,15 +244,18 @@ class DataBuffer(QObject):
             return {"status": "error", "message": f"Subprocess error: {e}"}
 
     def force_write(self):
-        """Force write current buffer (for shutdown, etc.)"""
+        """Force enqueue of current active buffer"""
         if self.buffer:
-            logger.info(f"Force writing {len(self.buffer)} buffered records")
-            self._write_buffer()
+            logger.info(f"Force flushing {len(self.buffer)} buffered records")
+            self._swap_and_enqueue()
 
     def stop(self):
-        """Stop the buffer and write any remaining data"""
+        """Stop the buffer and writer thread, flushing remaining data"""
         self.write_timer.stop()
         self.force_write()
+        # Signal writer thread to exit
+        self._write_queue.put(None)
+        self._writer_thread.join()
         logger.info("DataBuffer stopped")
 
 
