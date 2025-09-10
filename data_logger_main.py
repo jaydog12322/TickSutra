@@ -10,7 +10,7 @@ MODIFIED VERSION: Uses external parquet_tool.exe for 32-bit compatibility
 
 Design:
 - Captures "주식호가잔량" level-1 order book only
-- Uses screen sharding (8 screens, ~89 symbols each)
+- Uses screen sharding (15 screens, ~48 symbols each)
 - Double-buffers 100,000 records with background writer thread
 - Outputs to single daily Parquet file via external tool
 - Independent from main arbitrage system
@@ -277,7 +277,7 @@ class KiwoomDataLogger(QObject):
         self.is_connected = False
 
         # Real-time registration data
-        self.screens = list(range(1000, 1008))  # 8 screens: 1000-1007
+        self.screens = list(range(1000, 1015))  # 15 screens: 1000-1014
         # FIDs: price, change, volume + level-1 order book (주식호가잔량)
         # 41/51 = best ask/bid price, 61/71 = best ask/bid size
         self.hoga_fids = "10;11;12;13;27;28;41;51;61;71"

@@ -5,7 +5,7 @@ A standalone real-time market data logger for capturing KRX and NXT stock data f
 ## Features
 
 - **713 Symbol Support**: Captures data from all symbols listed on both KRX and NXT
-- **Screen Sharding**: Distributes symbols across 8 screens (≤100 symbols per screen)
+- **Screen Sharding**: Distributes symbols across 15 screens (≤100 symbols per screen)
 - **Dual Venue Capture**: Records both KRX and NXT data simultaneously
 - **Efficient Storage**: Buffers data and writes to single daily Parquet files
 - **Independent Operation**: Completely separate from main arbitrage system
@@ -156,8 +156,8 @@ nxt_data = df[df['venue'] == 'NXT']
 - **Output Format**: Parquet (compressed)
 
 ### Screen Allocation
-- **8 screens**: 1000-1007
-- **~89 symbols per screen** (713 ÷ 8)
+- **15 screens**: 1000-1014
+- **~48 symbols per screen** (713 ÷ 15)
 - **Both venues**: Each symbol registered for KRX + NXT
 
 ### Error Handling
