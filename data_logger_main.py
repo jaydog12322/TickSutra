@@ -18,7 +18,6 @@ Design:
 import sys
 import json
 import logging
-import time
 import subprocess
 import tempfile
 import threading
@@ -69,10 +68,10 @@ class DataBuffer(QObject):
         self._writer_thread = threading.Thread(target=self._writer_loop, daemon=True)
         self._writer_thread.start()
 
-        # Timer for periodic writes (every 1 second)
+        # Timer for periodic writes (every 10 seconds)
         self.write_timer = QTimer()
         self.write_timer.timeout.connect(self._periodic_write)
-        self.write_timer.start(1000)
+        self.write_timer.start(10000)
 
         # Validate parquet tool exists
         self.tool_available = self._validate_parquet_tool()
@@ -185,6 +184,8 @@ class DataBuffer(QObject):
                 else:
                     error_msg = f"Parquet write failed: {result.get('message', 'Unknown error')}"
                     logger.error(error_msg)
+                    if result.get('stderr'):
+                        logger.error(result['stderr'])
                     self.parquet_error.emit(error_msg)
 
             finally:
@@ -200,43 +201,44 @@ class DataBuffer(QObject):
             self.parquet_error.emit(error_msg)
 
     def _run_parquet_tool(self, command: str, input_file: str, output_file: str) -> Dict[str, Any]:
-        """Run the parquet tool and return parsed result"""
+        """Run the parquet tool and return parsed result."""
         try:
             cmd = [
                 str(self.parquet_tool_path),
                 command,
-                "--input", input_file,
-                "--output", output_file
+                "--input",
+                input_file,
+                "--output",
+                output_file,
             ]
-
-            logger.debug(f"Running parquet tool: {' '.join(cmd)}")
+            logger.debug("Running parquet tool: %s", " ".join(cmd))
 
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=60  # 60 second timeout
+                timeout=60,
             )
 
             # Parse JSON output
             try:
-                parsed_result = json.loads(result.stdout)
+                parsed = json.loads(result.stdout)
             except json.JSONDecodeError:
-                # If JSON parsing fails, create error result
-                parsed_result = {
+                parsed = {
                     "status": "error",
-                    "message": f"Invalid JSON output from parquet tool. stdout: {result.stdout}, stderr: {result.stderr}"
+                    "message": f"Invalid JSON output from parquet tool. stdout: {result.stdout}, stderr: {result.stderr}",
                 }
 
-            if result.returncode != 0:
-                # Command failed
-                if parsed_result.get('status') != 'error':
-                    parsed_result = {
-                        "status": "error",
-                        "message": f"Tool exited with code {result.returncode}. stderr: {result.stderr}"
-                    }
+            if result.returncode != 0 and parsed.get("status") != "error":
+                parsed = {
+                    "status": "error",
+                    "message": f"Tool exited with code {result.returncode}. stderr: {result.stderr}",
+                }
 
-            return parsed_result
+            if result.stderr:
+                parsed["stderr"] = result.stderr
+
+            return parsed
 
         except subprocess.TimeoutExpired:
             return {"status": "error", "message": "Parquet tool timeout"}
@@ -552,7 +554,7 @@ class DataLoggerGUI(QMainWindow):
         self.connection_status = QLabel("상태: 연결 안됨")
         self.symbols_status = QLabel("심볼: 0개 로드됨")
         self.parquet_status = QLabel("Parquet 도구: 확인 중...")
-        self.buffer_status = QLabel("버퍼: 0/5000")
+        self.buffer_status = QLabel("버퍼: 0/100000")
         self.records_status = QLabel("총 레코드: 0")
 
         status_layout.addWidget(self.connection_status)
@@ -574,7 +576,7 @@ class DataLoggerGUI(QMainWindow):
         """Initialize data components"""
         # MODIFIED: Data buffer with external parquet tool
         self.data_buffer = DataBuffer(
-            buffer_size=5000,
+            buffer_size=100000,
             output_dir="./data",
             parquet_tool_path="./parquet_tool.exe"  # External tool path
         )
