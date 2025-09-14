@@ -575,11 +575,12 @@ class DataLoggerGUI(QMainWindow):
     def init_components(self):
         """Initialize data components"""
         # MODIFIED: Data buffer with external parquet tool
-        self.data_buffer = DataBuffer(
-            buffer_size=100000,
-            output_dir="./data",
-            parquet_tool_path="./parquet_tool.exe"  # External tool path
-        )
+        self._buffer_config = {
+            "buffer_size": 100000,
+            "output_dir": "./data",
+            "parquet_tool_path": "./parquet_tool.exe",  # External tool path
+        }
+        self.data_buffer = DataBuffer(**self._buffer_config)
 
         # Symbol loader
         self.symbol_loader = SymbolLoader()
@@ -671,6 +672,13 @@ class DataLoggerGUI(QMainWindow):
         - Enable logging controls
         """
 
+        # Recreate data buffer if it was previously stopped
+        if not self.data_buffer._writer_thread.is_alive():
+            self.data_buffer = DataBuffer(**self._buffer_config)
+            self.data_buffer.file_written.connect(self.on_file_written)
+            self.data_buffer.parquet_error.connect(self.on_parquet_error)
+            self.check_parquet_tool()
+
         # Ensure we are connected
         if not self.kiwoom.is_connected:
             # Connection is asynchronous; on_kiwoom_connected will recall this
@@ -690,10 +698,11 @@ class DataLoggerGUI(QMainWindow):
 
     def stop_logging(self):
         """Stop data logging"""
-        self.data_buffer.force_write()
+        self.stop_btn.setEnabled(False)
+        self.data_buffer.stop()
         self.kiwoom.disconnect_api()
         self.start_btn.setEnabled(True)
-        self.stop_btn.setEnabled(False)
+
         self.log_message("⏹️ 로깅 중지 및 버퍼 플러시")
 
     def on_kiwoom_connected(self, success: bool):
