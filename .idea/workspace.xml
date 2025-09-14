@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ca1e8f0a-3c2d-4b0c-8c17-04bf13b9be14" name="Changes" comment="a">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/market_data_20250909.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/market_data_20250909.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/symbol_universe.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/config/symbol_universe.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,25 +37,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Parquet to Excel Converter.executor": "Run",
-    "Python.check_versions.executor": "Run",
-    "Python.data_logger_main.executor": "Run",
-    "Python.test_data_logger.executor": "Run",
-    "Python.test_logging_pipeline.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "double-buffer-upgrade__0909",
-    "last_opened_file_path": "C:/Tools/TickSutra",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Parquet to Excel Converter.executor&quot;: &quot;Run&quot;,
+    &quot;Python.check_versions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.data_logger_main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_data_logger.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_logging_pipeline.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;double-buffer-upgrade__0909&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Tools/TickSutra&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Tools\TickSutra" />
@@ -69,31 +69,6 @@
       <command value="pip install pandas&gt;=1.3.0" />
       <command value="pip install openpyxl&gt;=3.0.0" />
     </option>
-  </component>
-  <component name="RunManager">
-    <configuration name="test_data_logger" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="TickSutra" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_data_logger.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -115,7 +90,11 @@
       <workItem from="1757219578939" duration="2799000" />
       <workItem from="1757222404288" duration="10671000" />
       <workItem from="1757292469389" duration="18051000" />
-      <workItem from="1757380590819" duration="4337000" />
+      <workItem from="1757380590819" duration="5796000" />
+      <workItem from="1757460205194" duration="14461000" />
+      <workItem from="1757546462803" duration="3414000" />
+      <workItem from="1757634942064" duration="5539000" />
+      <workItem from="1757734866279" duration="594000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -245,7 +224,39 @@
       <option name="project" value="LOCAL" />
       <updated>1757389099560</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="a">
+      <option name="closed" value="true" />
+      <created>1757389435540</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1757389435540</updated>
+    </task>
+    <task id="LOCAL-00018" summary="a">
+      <option name="closed" value="true" />
+      <created>1757389468247</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1757389468247</updated>
+    </task>
+    <task id="LOCAL-00019" summary="a">
+      <option name="closed" value="true" />
+      <created>1757494677179</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1757494677179</updated>
+    </task>
+    <task id="LOCAL-00020" summary="a">
+      <option name="closed" value="true" />
+      <created>1757499752170</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1757499752170</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,10 +267,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="a" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/TickSutra$data_logger_main.coverage" NAME="data_logger_main Coverage Results" MODIFIED="1757385498202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TickSutra$data_logger_main.coverage" NAME="data_logger_main Coverage Results" MODIFIED="1757635135008" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$check_versions.coverage" NAME="check_versions Coverage Results" MODIFIED="1757173859475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$test_logging_pipeline.coverage" NAME="test_logging_pipeline Coverage Results" MODIFIED="1757311801980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$Parquet_to_Excel_Converter.coverage" NAME="Parquet to Excel Converter Coverage Results" MODIFIED="1757318317932" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/TickSutra$test_data_logger.coverage" NAME="test_data_logger Coverage Results" MODIFIED="1757383270331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TickSutra$test_data_logger.coverage" NAME="test_data_logger Coverage Results" MODIFIED="1757460230316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
