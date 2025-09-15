@@ -52,7 +52,7 @@ class DataBuffer(QObject):
 
     def __init__(self, buffer_size=100000, output_dir="./data", parquet_tool_path="./parquet_tool.exe"):
         super().__init__()
-
+        self.logging_active = False
         self.buffer_size = buffer_size
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
@@ -68,10 +68,10 @@ class DataBuffer(QObject):
         self._writer_thread = threading.Thread(target=self._writer_loop, daemon=True)
         self._writer_thread.start()
 
-        # Timer for periodic writes (every 10 seconds)
+        # Timer for periodic writes (every 15 seconds)
         self.write_timer = QTimer()
         self.write_timer.timeout.connect(self._periodic_write)
-        self.write_timer.start(10000)
+        self.write_timer.start(15000)
 
         # Validate parquet tool exists
         self.tool_available = self._validate_parquet_tool()
@@ -674,6 +674,7 @@ class DataLoggerGUI(QMainWindow):
 
         # Recreate data buffer if it was previously stopped
         if not self.data_buffer._writer_thread.is_alive():
+            self.logging_active = False
             self.data_buffer = DataBuffer(**self._buffer_config)
             self.data_buffer.file_written.connect(self.on_file_written)
             self.data_buffer.parquet_error.connect(self.on_parquet_error)
@@ -690,6 +691,7 @@ class DataLoggerGUI(QMainWindow):
         if not self.kiwoom.registered_symbols:
             self.log_message("심볼 로드 및 등록 중...")
             self.load_symbols()
+        self.logging_active = True
         self.start_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
         self.connect_btn.setEnabled(False)
@@ -698,9 +700,11 @@ class DataLoggerGUI(QMainWindow):
 
     def stop_logging(self):
         """Stop data logging"""
+        self.logging_active = False
         self.stop_btn.setEnabled(False)
-        self.data_buffer.stop()
+
         self.kiwoom.disconnect_api()
+        self.data_buffer.stop()
         self.start_btn.setEnabled(True)
 
         self.log_message("⏹️ 로깅 중지 및 버퍼 플러시")
@@ -716,6 +720,8 @@ class DataLoggerGUI(QMainWindow):
 
     def on_data_received(self, record: Dict[str, Any]):
         """Handle received market data"""
+        if not self.logging_active:
+            return
         self.data_buffer.add_record(record)
 
     def on_status_update(self, message: str):
@@ -747,6 +753,7 @@ class DataLoggerGUI(QMainWindow):
 
     def closeEvent(self, event):
         """Handle application close"""
+        self.logging_active = False
         self.log_message("애플리케이션 종료 중...")
         self.data_buffer.stop()
         self.kiwoom.disconnect_api()
