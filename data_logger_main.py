@@ -393,8 +393,8 @@ class KiwoomDataLogger(QObject):
     def _on_receive_real_data(self, code, real_type, data):
         """Handle real-time data"""
         try:
-            # Only process level-1 order book and stock quote events
-            if real_type not in ("주식호가잔량", "주식시세"):
+            # Process only the types we care about
+            if real_type not in ("주식호가잔량", "주식시세", "주식체결"):
                 return
 
             # Determine venue and symbol
@@ -424,22 +424,28 @@ class KiwoomDataLogger(QObject):
                 "raw_code": code,
             }
 
-            if real_type == "주식시세":
-                # Only current price is valid for this event type
-                record["fid_10"] = self._get_real_data(code, 10)
-            else:  # 주식호가잔량
+            if real_type == "주식체결":
+                # >>> Price/volume FIDs belong here. Read ONLY on 체결 <<<
                 record.update({
-                    "fid_10": self._get_real_data(code, 10),  # 현재가 (Current Price)
-                    "fid_11": self._get_real_data(code, 11),  # 전일대비 (Change from Prev Close)
-                    "fid_12": self._get_real_data(code, 12),  # 등락율 (Rate of Change)
-                    "fid_13": self._get_real_data(code, 13),  # 누적거래량 (Accumulated Volume)
-                    "fid_27": self._get_real_data(code, 27),  # 매도호가1 (Alt Ask Price)
-                    "fid_28": self._get_real_data(code, 28),  # 매수호가1 (Alt Bid Price)
+                    "fid_10": self._get_real_data(code, 10),  # 현재가
+                    "fid_11": self._get_real_data(code, 11),  # 전일대비
+                    "fid_12": self._get_real_data(code, 12),  # 등락률
+                    "fid_27": self._get_real_data(code, 27),  # 체결량
+                    "fid_28": self._get_real_data(code, 28),  # 누적거래량
+                })
+
+            elif real_type == "주식호가잔량":
+                # >>> Orderbook only (do NOT touch fid_10/11/12/27/28 here) <<<
+                record.update({
                     "fid_41": self._get_real_data(code, 41),  # 매도호가1 (Best Ask Price)
                     "fid_51": self._get_real_data(code, 51),  # 매수호가1 (Best Bid Price)
                     "fid_61": self._get_real_data(code, 61),  # 매도호가수량1 (Best Ask Size)
                     "fid_71": self._get_real_data(code, 71),  # 매수호가수량1 (Best Bid Size)
                 })
+
+            else:  # 주식시세
+                # Keep your prior behavior (current price only ok here if you want)
+                record["fid_10"] = self._get_real_data(code, 10)
 
             # Emit data signal
             self.data_received.emit(record)
