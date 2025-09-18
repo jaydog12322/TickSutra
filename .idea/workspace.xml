@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ca1e8f0a-3c2d-4b0c-8c17-04bf13b9be14" name="Changes" comment="a">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/symbol_universe.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/config/symbol_universe.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="double-buffer-upgrade_0909" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -45,7 +44,7 @@
     &quot;Python.test_data_logger.executor&quot;: &quot;Run&quot;,
     &quot;Python.test_logging_pipeline.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;double-buffer-upgrade__0909&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;실시간체결upgrade__0915&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Tools/TickSutra&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -95,6 +94,11 @@
       <workItem from="1757546462803" duration="3414000" />
       <workItem from="1757634942064" duration="5539000" />
       <workItem from="1757734866279" duration="594000" />
+      <workItem from="1757838403480" duration="3329000" />
+      <workItem from="1757891587934" duration="13104000" />
+      <workItem from="1757980241535" duration="8357000" />
+      <workItem from="1758066150690" duration="7074000" />
+      <workItem from="1758154232866" duration="593000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -256,7 +260,47 @@
       <option name="project" value="LOCAL" />
       <updated>1757499752170</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="a">
+      <option name="closed" value="true" />
+      <created>1757838547000</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1757838547000</updated>
+    </task>
+    <task id="LOCAL-00022" summary="a">
+      <option name="closed" value="true" />
+      <created>1757892342193</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1757892342193</updated>
+    </task>
+    <task id="LOCAL-00023" summary="a">
+      <option name="closed" value="true" />
+      <created>1757900319258</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1757900319258</updated>
+    </task>
+    <task id="LOCAL-00024" summary="a">
+      <option name="closed" value="true" />
+      <created>1757904098877</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1757904098877</updated>
+    </task>
+    <task id="LOCAL-00025" summary="a">
+      <option name="closed" value="true" />
+      <created>1757945058468</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1757945058468</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,7 +311,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="a" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/TickSutra$data_logger_main.coverage" NAME="data_logger_main Coverage Results" MODIFIED="1757635135008" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TickSutra$data_logger_main.coverage" NAME="data_logger_main Coverage Results" MODIFIED="1758067107518" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$check_versions.coverage" NAME="check_versions Coverage Results" MODIFIED="1757173859475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$test_logging_pipeline.coverage" NAME="test_logging_pipeline Coverage Results" MODIFIED="1757311801980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TickSutra$Parquet_to_Excel_Converter.coverage" NAME="Parquet to Excel Converter Coverage Results" MODIFIED="1757318317932" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

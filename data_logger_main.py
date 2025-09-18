@@ -431,6 +431,7 @@ class KiwoomDataLogger(QObject):
                     "fid_10": self._get_real_data(code, 10),  # 현재가
                     "fid_11": self._get_real_data(code, 11),  # 전일대비
                     "fid_12": self._get_real_data(code, 12),  # 등락률
+                    "fid_13": self._get_real_data(code, 13),  # 누적거래대금
                     "fid_15": self._get_real_data(code, 15),  # 거래량
                     "fid_27": self._get_real_data(code, 27),  # 체결량
                     "fid_28": self._get_real_data(code, 28),  # 누적거래량
