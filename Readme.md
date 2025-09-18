@@ -287,7 +287,7 @@ This logger creates data files that can be fed into your arbitrage system simula
 
 ### Data Compatibility
 The output schema exactly matches your arbitrage system's MarketDataManager expectations:
-- Same FID fields (10,11,12,13,27,28,41,51)
+- Same FID fields (10,11,12,13,15,27,28,41,51)
 - Same venue detection logic (_NX suffix)
 - Same real-time type ("주식호가잔량")
 - Compatible timestamp format
@@ -315,7 +315,7 @@ def filter_symbols(symbols):
 ### Custom FID Fields
 ```python
 # To capture additional fields, modify hoga_fids:
-self.hoga_fids = "10;11;12;13;27;28;41;51;20"  # Add FID 20 (체결시간)
+self.hoga_fids = "10;11;12;13;15;27;28;41;51;20"  # Add FID 20 (체결시간)
 ```
 
 ## Production Deployment

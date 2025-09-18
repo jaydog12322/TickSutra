@@ -282,7 +282,7 @@ class KiwoomDataLogger(QObject):
         self.screens = list(range(1000, 1015))  # 15 screens: 1000-1014
         # FIDs: price, change, volume + level-1 order book (주식호가잔량)
         # 41/51 = best ask/bid price, 61/71 = best ask/bid size
-        self.hoga_fids = "10;11;12;13;27;28;41;51;61;71"
+        self.hoga_fids = "10;11;12;13;15;27;28;41;51;61;71"
 
         # Data tracking
         self.registered_symbols = []
@@ -415,6 +415,7 @@ class KiwoomDataLogger(QObject):
                 "fid_11": "",
                 "fid_12": "",
                 "fid_13": "",
+                "fid_15": "",
                 "fid_27": "",
                 "fid_28": "",
                 "fid_41": "",
@@ -430,6 +431,7 @@ class KiwoomDataLogger(QObject):
                     "fid_10": self._get_real_data(code, 10),  # 현재가
                     "fid_11": self._get_real_data(code, 11),  # 전일대비
                     "fid_12": self._get_real_data(code, 12),  # 등락률
+                    "fid_15": self._get_real_data(code, 15),  # 거래량
                     "fid_27": self._get_real_data(code, 27),  # 체결량
                     "fid_28": self._get_real_data(code, 28),  # 누적거래량
                 })
