@@ -282,7 +282,7 @@ class KiwoomDataLogger(QObject):
         self.screens = list(range(1000, 1015))  # 15 screens: 1000-1014
         # FIDs: price, change, volume + level-1 order book (주식호가잔량)
         # 41/51 = best ask/bid price, 61/71 = best ask/bid size
-        self.hoga_fids = "10;11;12;13;15;27;28;41;51;61;71"
+        self.hoga_fids = "10;11;12;13;15;27;28;41;51;61;71;9068"
 
         # Data tracking
         self.registered_symbols = []
@@ -426,6 +426,8 @@ class KiwoomDataLogger(QObject):
                 "raw_code": code,
             }
 
+            record["fid_9068"] = self._get_real_data(code, 9068)
+
             if real_type == "주식체결":
                 # >>> Price/volume FIDs belong here. Read ONLY on 체결 <<<
                 record.update({
@@ -436,7 +438,6 @@ class KiwoomDataLogger(QObject):
                     "fid_15": self._get_real_data(code, 15),  # 거래량
                     "fid_27": self._get_real_data(code, 27),  # 체결량
                     "fid_28": self._get_real_data(code, 28),  # 누적거래량
-                    "fid_9068": self._get_real_data(code, 9068),  # VI발동구분
                 })
 
             elif real_type == "주식호가잔량":
