@@ -418,6 +418,7 @@ class KiwoomDataLogger(QObject):
                 "fid_15": "",
                 "fid_27": "",
                 "fid_28": "",
+                "fid_9068": "",
                 "fid_41": "",
                 "fid_51": "",
                 "fid_61": "",
@@ -435,6 +436,7 @@ class KiwoomDataLogger(QObject):
                     "fid_15": self._get_real_data(code, 15),  # 거래량
                     "fid_27": self._get_real_data(code, 27),  # 체결량
                     "fid_28": self._get_real_data(code, 28),  # 누적거래량
+                    "fid_9068": self._get_real_data(code, 9068),  # VI발동구분
                 })
 
             elif real_type == "주식호가잔량":
